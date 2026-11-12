@@ -168,8 +168,56 @@ function i18n(root){
   root.querySelectorAll("[placeholder]").forEach(e=>{{const f=faOf(e.placeholder),m=LANG();if(f)e.placeholder=m===2?f:e.placeholder+" · "+f}});
 }
 
+
+// ---------- Wörterbuch (Duden Synonyme)
+let SYN=null,SYNF=null,SYNQ="";
+const foldS=s=>s.toLowerCase().replace(/[äàáâ]/g,"a").replace(/[öôó]/g,"o").replace(/[üûú]/g,"u").replace(/[éèê]/g,"e").replace(/ß/g,"ss").replace(/[¹²³⁴⁵⁶⁷⁸⁹]/g,"");
+async function synLoad(){
+  if(SYN)return;
+  SYN=await fetch("synonyms.json").then(r=>r.json());
+  SYNF=SYN.map(e=>[foldS(e[0]),foldS(e[1])]);
+}
+function synSearch(q,max){
+  const f=foldS(q.trim());if(!f)return{r:[],hc:0};
+  const seen=new Uint8Array(SYN.length),r=[];
+  const tests=[h=>h===f,h=>h.startsWith(f),h=>h.endsWith(f),h=>h.includes(f)];
+  for(const t of tests)for(let i=0;i<SYN.length&&r.length<max;i++)if(!seen[i]&&t(SYNF[i][0])){seen[i]=1;r.push(i)}
+  const hc=r.length;
+  for(let i=0;i<SYN.length&&r.length<max;i++)if(!seen[i]&&SYNF[i][1].includes(f)){seen[i]=1;r.push(i)}
+  return{r,hc};
+}
+function synFind(w){const f=foldS(w.trim());for(let i=0;i<SYN.length;i++)if(SYNF[i][0]===f)return i;return -1}
+function synWords(b){
+  let s=b.replace(/\([^)]*\):/g,";").replace(/\(\d+\)/g,"").replace(/^\d+\.\s*/gm,"").replace(/\b[a-z]\)\s*/g,"").replace(/↑/g,"").replace(/\[([^\]]*)\]/g,"$1");
+  const r=[];s.split(/[,;.\n]/).forEach(p=>{p=p.trim();if(p.length<2||p.length>28||p.split(" ").length>2)return;if(!r.includes(p))r.push(p)});
+  return r;
+}
+async function viewDict(){
+  render("B2 ÖSD",false,'<div class="card" style="margin-bottom:10px"><h3>Wörterbuch</h3><div class="small" style="font-weight:400">Duden – Das Wörterbuch der Synonyme</div></div><input type="text" id="dq" placeholder="Wort oder Wortteil eingeben" autocomplete="off" autocapitalize="off" style="margin-bottom:10px"><div id="dl"><div class="muted">Lade …</div></div>',"dict");
+  await synLoad();
+  const dq=$("#dq"),dl=$("#dl");dq.value=SYNQ;
+  const hint=()=>{dl.innerHTML='<div class="muted" id="dh">Tippe einen Wortteil – am Anfang, in der Mitte oder am Ende. Gefunden werden Stichwörter und Wörter in den Synonymen.</div>';i18n(dl)};
+  const go=()=>{
+    SYNQ=dq.value;if(!SYNQ.trim()){hint();return}
+    const {r,hc}=synSearch(SYNQ,60);
+    if(!r.length){dl.innerHTML='<div class="muted">Keine Treffer.</div>';i18n(dl);return}
+    dl.innerHTML=r.map((i,k)=>(k===hc&&hc>0?'<div class="muted" style="margin:8px 2px 6px;font-size:12px">'+(LANG()===2?"در توضیح مدخل‌های دیگر":"Weitere Einträge mit diesem Wort in den Synonymen")+'</div>':'')
+      +'<a class="card" data-nt="1" href="#/dictw/'+i+'" style="display:block;color:inherit;text-decoration:none;margin-bottom:6px;padding:10px 14px"><b style="font-size:17px">'+esc(SYN[i][0])+'</b><div class="muted" style="font-size:13px">'+esc(SYN[i][1].replace(/\n/g,"  ").slice(0,90))+'</div></a>').join("");
+  };
+  dq.oninput=go;
+  go();
+}
+async function viewDictW(i){
+  await synLoad();const e=SYN[i];if(!e){location.replace("#/dict");return}
+  const links=synWords(e[1]).filter(w=>synFind(w)>=0);
+  const h='<div class="card"><h3 data-nt="1" style="font-size:26px;margin:0">'+esc(e[0])+'</h3><div class="muted" style="font-size:12px;margin:6px 0 4px">Synonyme</div><div data-nt="1" style="font-size:17px;white-space:pre-line">'+esc(e[1])+'</div></div>'
+   +(links.length?'<h3 style="margin:14px 0 8px">Weiterschlagen</h3><div data-nt="1" style="display:flex;flex-wrap:wrap;gap:8px">'+links.map(w=>'<a href="#/dictw/'+synFind(w)+'" style="background:var(--today);color:var(--title);padding:7px 12px;border-radius:16px;text-decoration:none;font-size:15px">'+esc(w)+'</a>').join("")+'</div>':'');
+  render("B2 ÖSD",true,h,null);
+  // Titel der Überschriften übersetzen, aber Wörterbuchtext nicht
+}
+
 // ---------- Router
-const TABS=[["today","Heute"],["days","Tage"],["cards","Karten"],["settings","Einstellungen"]];
+const TABS=[["today","Heute"],["days","Tage"],["cards","Karten"],["dict","Wörterbuch"],["settings","Einstellungen"]];
 function route(){
   const h=(location.hash||"#/today").slice(2).split("/");const p=h[0];
   let title="B2 ÖSD",back=false,html="",after=null;
@@ -182,14 +230,16 @@ function route(){
   else if(p==="timer"){return viewTimer()}
   else if(p==="days"){html=viewDays()}
   else if(p==="cards"){html=viewCards();after=bindCards}
+  else if(p==="dict"){return viewDict()}
+  else if(p==="dictw"){return viewDictW(+h[1])}
   else if(p==="settings"){html=viewSettings();after=bindSettings}
   else{html=viewToday()}
-  render(title,back,html,!back&&["today","days","cards","settings"].includes(p)?p:null);
+  render(title,back,html,!back&&["today","days","cards","dict","settings"].includes(p)?p:null);
   if(after)after();
   if(p==="unlock")bindUnlock();
   if(p==="days"){const e=$("#cur");if(e)e.scrollIntoView({block:"center"})}
 }
-const NAVI={today:"🏠",days:"📅",cards:"🗂",settings:"⚙️"};
+const NAVI={today:"🏠",days:"📅",cards:"🗂",dict:"📖",settings:"⚙️"};
 function render(title,back,html,tab){
   $("#head").innerHTML=(back?'<button onclick="goBack()">‹ Zurück</button>':"")+"<span>"+esc(title)+"</span>";
   $("#main").innerHTML=html;$("#main").scrollTop=0;
@@ -462,7 +512,7 @@ function viewSettings(){
   +'<div class="small" style="margin-top:10px">Uhrzeit</div><input type="time" id="rt" value="'+t+'"><button class="btn f" id="ics">Tägliche Erinnerung zum Kalender hinzufügen</button><div class="muted" style="margin-top:6px">Es öffnet sich die Kalender-Vorschau: Tippe auf „Alle hinzufügen“. Zum Ändern den Termin im Kalender löschen und neu hinzufügen.</div></div>'
   +'<div class="card"><h3>Fortschritt sichern</h3><div class="muted">Safari kann Daten löschen. Kopiere diesen Text als Sicherung (z. B. in Notizen) und füge ihn bei Bedarf wieder ein.</div><button class="btn" id="exp">Sicherung kopieren</button><textarea id="imp" rows="2" placeholder="Sicherung hier einfügen" style="margin-top:8px;width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px"></textarea><button class="btn" id="impb">Sicherung wiederherstellen</button><div class="muted" id="bm" style="margin-top:6px"></div></div>'
   +'<div class="card"><h3>Support</h3><div style="font-size:18px;font-weight:700">'+NAME+'</div><div class="muted" style="margin-top:6px">Telefon</div><div style="font-weight:700;direction:ltr;text-align:left">'+PHONE+'</div><div class="muted" style="margin-top:6px">E-Mail</div><div style="font-weight:700">'+EMAIL+'</div><a class="btn a" href="tel:'+PHONE+'">Anrufen</a><a class="btn f" href="mailto:'+EMAIL+'">E-Mail schreiben</a></div>'
-  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.0.0</div>';
+  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.1.0</div>';
 }
 function bindSettings(){
   document.querySelectorAll('input[name=th]').forEach(r=>r.onchange=()=>{S.theme=+r.value;save();applyTheme()});
