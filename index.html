@@ -12,54 +12,63 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>B2 ÖSD</title>
 <style>
-:root{--bg:#F4F6F8;--card:#fff;--line:#DDE3E9;--bar:#1F4E79;--text:#1B2530;--muted:#5F6C79;--title:#1F4E79;--acct:#1F7A8C;--ok:#2E7D32;--okt:#2E7D32;--primary:#1F4E79;--accent:#1F7A8C;--today:#E6F2F5;--warn:#FFF4D6;--warnl:#E8C766;--warnt:#6B4E00;--s0:#B3261E;--s1:#1F4E79;--s2:#6A3FA0;--s3:#2E7D32;--s4:#B26A00;--s5:#1F7A8C}
-:root[data-eff="dark"]{--bg:#0F141A;--card:#19212A;--line:#2B3642;--bar:#16324D;--text:#E7EDF3;--muted:#9AA8B6;--title:#8EC5F0;--acct:#5CC8D6;--okt:#7BD58A;--primary:#2B6CA3;--accent:#2A93A8;--ok:#2E7D32;--today:#17323A;--warn:#3A3115;--warnl:#6B5A1F;--warnt:#F0D98A;--s0:#FF8A80;--s1:#8EC5F0;--s2:#C9A7F0;--s3:#7BD58A;--s4:#F2B866;--s5:#5CC8D6}
+@font-face{font-family:"Vazirmatn";src:url(fonts/Vazirmatn-Regular.woff) format("woff");font-weight:400;font-display:swap}
+@font-face{font-family:"Vazirmatn";src:url(fonts/Vazirmatn-Bold.woff) format("woff");font-weight:700;font-display:swap}
+:root{--bg:#F5F7FB;--card:#fff;--line:#E5E9F2;--bar:#2F4B9B;--bar2:#2A9FB5;--text:#1D2433;--muted:#6B7488;--title:#2F4B9B;--acct:#1B8CA3;--ok:#2FA36B;--okt:#1E8A59;--primary:#3A5BC7;--accent:#20A4B8;--today:#EAF0FF;--warn:#FFF3D6;--warnl:#F0D58A;--warnt:#7A5200;--shadow:0 2px 10px rgba(30,45,90,.08);--s0:#20A4B8;--s1:#3A5BC7;--s2:#8E5BD6;--s3:#E08A2D;--s4:#2FA36B;--s5:#E0556B}
+:root[data-eff="dark"]{--bg:#0E1220;--card:#181E31;--line:#2A3350;--bar:#1E2C66;--bar2:#17727F;--text:#E8ECF7;--muted:#9AA5C2;--title:#9DB4FF;--acct:#5FD0E0;--okt:#6FD6A3;--primary:#4766D8;--accent:#1E94A6;--ok:#2FA36B;--today:#1B2747;--warn:#3A2F12;--warnl:#6B5A22;--warnt:#F2D98A;--shadow:none;--s0:#5FD0E0;--s1:#8FA8FF;--s2:#C4A4F2;--s3:#F0B070;--s4:#6FD6A3;--s5:#F08A9A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.4 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.5 "Vazirmatn",-apple-system,system-ui,sans-serif;-webkit-text-size-adjust:100%}
 #app{display:flex;flex-direction:column;height:100%;max-width:720px;margin:0 auto;background:var(--bg)}
-.head{background:var(--bar);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 14px 12px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px;flex:none}
+.head{background:linear-gradient(90deg,var(--bar),var(--bar2));color:#fff;padding:calc(env(safe-area-inset-top) + 14px) 18px 16px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:19px;flex:none;border-radius:0 0 22px 22px;box-shadow:0 4px 14px rgba(20,40,90,.18)}
 .head button{background:none;border:0;color:#fff;font:inherit;padding:0}
-.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px}
-.nav{display:flex;flex:none;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.nav a{flex:1;text-align:center;padding:12px 4px;color:var(--muted);font-weight:600;font-size:14px;text-decoration:none}
-.nav a.on{color:var(--title);box-shadow:inset 0 3px 0 var(--accent)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px}
+.nav{display:flex;flex:none;background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(env(safe-area-inset-bottom) + 6px);gap:4px}
+.nav a{flex:1;text-align:center;padding:7px 2px;color:var(--muted);text-decoration:none;border-radius:16px;display:flex;flex-direction:column;align-items:center;line-height:1.25}
+.nav a i{font-style:normal;font-size:21px}.nav a b{font-size:11.5px}.nav a small{font-size:10px}
+.nav a.on{color:var(--title);background:var(--today)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.hero{background:linear-gradient(120deg,var(--bar),var(--bar2));color:#fff;border:0}
+.hero .small,.hero .muted{color:#D6E4FF}
+.hero .bar{background:rgba(255,255,255,.25)}.hero .bar i{background:#fff}
+.hero .btn,.hero .btn.f,.hero .btn.a{background:#fff;color:var(--title);border:0}
 .row{display:flex;align-items:center;gap:10px}
 .sp{flex:1}
 .small{font-size:12px;color:var(--muted);font-weight:700}
 .muted{color:var(--muted);font-size:14px}
 h2{margin:0 0 4px;font-size:20px}h3{margin:0 0 6px;font-size:17px;color:var(--title)}
-.big{font-size:24px;font-weight:700}
+.big{font-size:26px;font-weight:700}
 .acct{color:var(--acct)}
-.btn{display:block;width:100%;border:1px solid var(--line);background:transparent;color:var(--title);border-radius:10px;padding:12px;font:inherit;font-weight:600;margin-top:8px;text-align:center;text-decoration:none}
+.btn{display:block;width:100%;border:1px solid var(--line);background:transparent;color:var(--title);border-radius:14px;padding:12px;font:inherit;font-weight:700;margin-top:8px;text-align:center;text-decoration:none;white-space:pre-line}
 .btn.f{background:var(--primary);color:#fff;border-color:transparent}
 .btn.a{background:var(--accent);color:#fff;border-color:transparent}
 .btn:disabled{opacity:.4}
-.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:10px}
-.bar i{display:block;height:100%;background:var(--accent)}
+.bar{height:9px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:5px}
 .today{background:var(--today);border-color:var(--accent)}
-.warn{background:var(--warn);border:1px solid var(--warnl);color:var(--warnt);padding:12px;border-radius:12px;margin-bottom:12px}
+.warn{background:var(--warn);border:1px solid var(--warnl);color:var(--warnt);padding:12px;border-radius:14px;margin-bottom:12px}
 .d{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
-.num{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.num{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
 .num.ok{background:var(--ok)}
-.txt{white-space:pre-wrap;line-height:1.5}
+.txt{white-space:pre-wrap;line-height:1.7}
 .sec h3{margin:0}
-.sec .body{margin-top:6px}
+.sec .body{margin-top:8px}
 .sec.closed .body{display:none}
+.chip{width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
 .cb{width:26px;height:26px;accent-color:var(--accent)}
 .cat{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
-.sh{font-size:13px;font-weight:700;color:var(--muted);margin:14px 2px 8px}
+.sh{font-size:13px;font-weight:700;color:var(--muted);margin:16px 2px 8px;letter-spacing:.5px}
 .fc{min-height:280px;display:flex;flex-direction:column;justify-content:flex-start;cursor:pointer}
-.fc .de{font-size:22px;font-weight:700;color:var(--title)}
+.fc .de{font-size:23px;font-weight:700;color:var(--title)}
 .fc .fa{font-size:24px;font-weight:700;margin-top:8px}
 .blk{margin-top:12px}.blk b{display:block;font-size:12px;color:var(--muted)}
 .big0{display:flex;align-items:center;justify-content:center;min-height:240px;text-align:center;font-size:26px;font-weight:700}
 .two{display:flex;gap:8px}.two .btn{margin-top:8px}
-input[type=text],textarea,input[type=time]{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+input[type=text],textarea,input[type=time]{width:100%;font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px}
 .mono{font-family:ui-monospace,Menlo,monospace;direction:ltr;text-align:left;font-weight:700;letter-spacing:1px;user-select:all;-webkit-user-select:all}
-.radio label{display:flex;gap:10px;align-items:center;padding:8px 0}
+.radio label{display:flex;gap:10px;align-items:center;padding:8px 0;white-space:pre-line}
 .radio input{accent-color:var(--accent);width:20px;height:20px}
 [dir=auto]{unicode-bidi:plaintext}
+.pl{white-space:pre-line}
 </style>
 </head>
 <body>
@@ -74,13 +83,21 @@ const NAMES=["Hören","Lesen","Grammatik","Wortschatz","Schreiben","Sprechen"];
 const CATS=["Modal- und Hilfsverben","Unregelmäßige Verben","Verben mit Dativ","Verben mit Akkusativ und Dativ","Verben mit Genitiv / zwei Akkusativen","Verben mit Präposition","Adjektive mit Präposition","Nomen-Verb-Verbindungen","Präpositionen und Satzverbindungen","Lektion 1","Lektion 2","Lektion 3","Lektion 4","Lektion 5","Lektion 6","Lektion 7","Lektion 8","Lektion 9","Lektion 10","Lektion 11","Lektion 12"];
 const GROUPS=[["Grammatik",0,8],["B2 Wortschatz",9,20]];
 const FREE_CAT=[0,9];
-let DAYS=[],CARDS=[];
+let DAYS=[],CARDS=[],HELP=null;
 
 // ---------- Speicher
 let S={};
 function load(){try{S=JSON.parse(localStorage.getItem("b2osd")||"{}")}catch(e){S={}}S.done=S.done||{};S.known=S.known||{};}
 function save(){try{localStorage.setItem("b2osd",JSON.stringify(S))}catch(e){}}
 load();
+const DAYS_I=[0,1,3,7,14,30];
+function touch(){S.active=S.active||[];const t=dayNum();if(!S.active.includes(t)){S.active.push(t);S.active=S.active.slice(-400);save()}}
+function streak(){const a=new Set(S.active||[]);let d=dayNum();if(!a.has(d))d--;let n=0;while(a.has(d)){n++;d--}return n}
+if(!S.srs){S.srs={};for(const id in S.known){S.srs[id]=[3,dayNum()+1]}save()}
+const box=id=>S.srs[id]?S.srs[id][0]:0;
+const isKnown=id=>box(id)>=2;
+const isDue=id=>!!S.srs[id]&&S.srs[id][1]<=dayNum();
+function rate(id,ok){const b=box(id),t=dayNum();let nb,due;if(ok){nb=b===0?2:Math.min(5,b+1);due=t+DAYS_I[nb]}else{nb=1;due=t}S.srs[id]=[nb,due];touch();save()}
 
 // ---------- Hilfen
 const $=s=>document.querySelector(s);
@@ -88,7 +105,7 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",
 const N=()=>DAYS.length;
 function dayNum(){const d=new Date();return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000)}
 const isDone=(d,k)=>!!S.done["d"+d+"_"+k];
-function setDone(d,k,v){if(v)S.done["d"+d+"_"+k]=1;else delete S.done["d"+d+"_"+k];save()}
+function setDone(d,k,v){if(v){S.done["d"+d+"_"+k]=1;touch()}else delete S.done["d"+d+"_"+k];save()}
 const doneCount=d=>KEYS.filter(k=>isDone(d,k)).length;
 const fullDays=()=>{let k=0;for(let d=1;d<=N();d++)if(doneCount(d)===6)k++;return k};
 const minutes=(d,k)=>(d.sec[k]&&d.sec[k].min)||0;
@@ -133,6 +150,24 @@ function applyTheme(){
 }
 matchMedia("(prefers-color-scheme: dark)").addEventListener&&matchMedia("(prefers-color-scheme: dark)").addEventListener("change",applyTheme);
 
+// ---------- Menüsprache (aus tr.json)
+let TR={exact:{},rules:[]};
+function faOf(s){
+  if(!s)return null;if(TR.exact[s])return TR.exact[s];
+  for(const [re,out] of TR.rules){const m=s.match(new RegExp(re));if(m){
+    return out.replace(/\$T(\d)/g,(_,g)=>{const p=m[+g];if(p==null)return"";const t=faOf(p);return t!=null?t:p}).replace(/\$(\d)/g,(_,g)=>m[+g]==null?"":m[+g])}}
+  return null;
+}
+const LANG=()=>S.lang==null?0:S.lang;
+function tr(s){const m=LANG();if(m===1)return s;const f=faOf(s);if(f==null)return s;if(m===2)return f;return (TR.exact[s]&&s.length+f.length<=30)?s+" · "+f:s+"\n"+f}
+function i18n(root){
+  if(LANG()===1)return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null);const nodes=[];let n;while(n=w.nextNode())nodes.push(n);
+  for(const t of nodes){const v=t.nodeValue;const tv=v.trim();if(!tv||t.parentNode.closest&&t.parentNode.closest("[data-nt]"))continue;
+    const r=(LANG()===0&&/^\d+ Min\.$/.test(tv))?tv:tr(tv);if(r!==tv){t.nodeValue=v.replace(tv,r);t.parentNode.setAttribute("dir","auto");if(r.includes("\n"))t.parentNode.style.whiteSpace="pre-line"}}
+  root.querySelectorAll("[placeholder]").forEach(e=>{{const f=faOf(e.placeholder),m=LANG();if(f)e.placeholder=m===2?f:e.placeholder+" · "+f}});
+}
+
 // ---------- Router
 const TABS=[["today","Heute"],["days","Tage"],["cards","Karten"],["settings","Einstellungen"]];
 function route(){
@@ -140,9 +175,13 @@ function route(){
   let title="B2 ÖSD",back=false,html="",after=null;
   if(p==="day"){const r=viewDay(+h[1]);return r}
   if(p==="unlock"){back=true;title="Vollversion";html=viewUnlock()}
-  else if(p==="flash"){back=true;title="Lernkarten";return viewFlash(+h[1])}
+  else if(p==="flash"||p==="flashdue"||p==="flashid"){return viewFlash(p,h[1])}
+  else if(p==="quiz"){return viewQuiz()}
+  else if(p==="quizall"){QZ={ids:unlockedCards().map(x=>x.id),title:"Alle Karten"};startQuiz();location.replace("#/quiz");return}
+  else if(p==="help"){return viewHelp(h[1])}
+  else if(p==="timer"){return viewTimer()}
   else if(p==="days"){html=viewDays()}
-  else if(p==="cards"){html=viewCards()}
+  else if(p==="cards"){html=viewCards();after=bindCards}
   else if(p==="settings"){html=viewSettings();after=bindSettings}
   else{html=viewToday()}
   render(title,back,html,!back&&["today","days","cards","settings"].includes(p)?p:null);
@@ -150,11 +189,14 @@ function route(){
   if(p==="unlock")bindUnlock();
   if(p==="days"){const e=$("#cur");if(e)e.scrollIntoView({block:"center"})}
 }
+const NAVI={today:"🏠",days:"📅",cards:"🗂",settings:"⚙️"};
 function render(title,back,html,tab){
   $("#head").innerHTML=(back?'<button onclick="goBack()">‹ Zurück</button>':"")+"<span>"+esc(title)+"</span>";
   $("#main").innerHTML=html;$("#main").scrollTop=0;
   $("#nav").style.display=tab?"flex":"none";
-  $("#nav").innerHTML=TABS.map(t=>'<a href="#/'+t[0]+'" class="'+(t[0]===tab?"on":"")+'">'+t[1]+"</a>").join("");
+  const m=LANG();
+  $("#nav").innerHTML=TABS.map(t=>{const f=faOf(t[1]);return '<a href="#/'+t[0]+'" class="'+(t[0]===tab?"on":"")+'"><i>'+NAVI[t[0]]+'</i>'+(m!==2?'<b>'+t[1]+'</b>':'')+(m!==1&&f?(m===2?'<b>'+f+'</b>':'<small>'+f+'</small>'):'')+'</a>'}).join("");
+  i18n($("#head"));i18n($("#main"));
 }
 function goBack(){if(history.length>1)history.back();else location.hash="#/today"}
 
@@ -163,13 +205,16 @@ function viewToday(){
   const n=N(),off=offset(),day=today(),d=DAYS[day-1],done=doneCount(day);
   let h="";
   if(off>n)h+='<div class="warn">Der '+n+'-Tage-Plan ist abgeschlossen. Gut gemacht!</div>';
-  h+='<div class="card today"><div class="small acct">'+(off>=1&&off<=n?"HEUTE":"TAG")+'</div><div class="big">Tag '+day+' von '+n+'</div>'
+  h+='<div class="card hero"><div class="small">'+(off>=1&&off<=n?"HEUTE":"TAG")+'</div><div class="big">Tag '+day+' von '+n+'</div>'
    +'<div style="margin-top:8px;font-weight:700">Schwerpunkt: '+esc(d.focus)+'</div><div class="muted">'+esc(d.phase)+' · '+d.total+' Min. geplant</div>'
    +'<div class="bar"><i style="width:'+done/6*100+'%"></i></div><div class="muted">'+done+' von 6 Bereichen erledigt</div>';
   if(isLocked(day))h+='<div style="margin-top:12px">🔒 Ab Tag '+(FREE_DAYS+1)+' ist die Vollversion nötig.</div><a class="btn a" href="#/unlock">Vollversion freischalten · '+PRICE+'</a>';
   h+='<a class="btn f" href="#/day/'+day+'">Aufgaben von Tag '+day+' öffnen</a></div>';
   if(doneCount(day)<6&&day>1&&false){}
   h+='<div class="card"><h3>Gesamtfortschritt</h3><div class="bar"><i style="width:'+fullDays()/n*100+'%"></i></div><div class="muted">'+fullDays()+' von '+n+' Tagen vollständig erledigt</div></div>';
+  {const pr=progressCards(),dn=dueList().length,sk=streak();
+   h+='<div class="card"><h3>Dein Lernen</h3><div style="font-weight:700">🔥 Serie: '+sk+(sk===1?" Tag":" Tage")+' in Folge</div><div class="muted">Karten gelernt: '+pr[0]+' von '+pr[1]+'</div><div class="muted" style="'+(dn?"color:var(--acct);font-weight:700":"")+'">'+(dn?"Zur Wiederholung fällig: "+dn+" Karten (Tab Karten)":"Keine Karten zur Wiederholung fällig")+'</div></div>'
+    +'<div class="card"><h3>Werkzeuge</h3><a class="btn" href="#/help/write">Schreiben · Redemittel und Checkliste</a><a class="btn" href="#/help/speak">Sprechen · Redemittel</a><a class="btn" href="#/timer">Prüfungs-Timer</a></div>';}
   h+='<div class="card"><h3>Vollversion</h3>'+(UNLOCKED?'<div class="muted" style="color:var(--okt)">✓ Freigeschaltet – alle Tage verfügbar</div>'
    :'<div class="muted">Tag 1 ist kostenlos. Für alle weiteren Tage brauchst du die Vollversion ('+PRICE+', einmalig).</div><a class="btn" href="#/unlock">Freischalten</a>')+'</div>';
   return h;
@@ -200,6 +245,7 @@ function viewDay(day){
       body='<div class="txt" dir="auto">'+esc(sec.text)+'</div>';
       if(sec.url){let host=sec.url;try{host=new URL(sec.url).hostname.replace(/^www\./,"")}catch(e){}body+='<a class="btn a" target="_blank" rel="noopener" href="'+esc(sec.url)+'">Link öffnen · '+esc(host)+'</a>'}
     }
+    if(k==="wortschatz"||k==="grammatik"){const dn=dueList().length;body+=dn?'<a class="btn" href="#/flashdue">Fällige Karten wiederholen ('+dn+')</a>':'<a class="btn" href="#/cards">Lernkarten öffnen</a>'}
     h+='<div class="card sec" data-i="'+i+'"><div class="row hd"><h3 class="sp" style="color:var(--s'+i+')">'+NAMES[i]+'</h3><span class="muted">'+minutes(d,k)+' Min.</span><input type="checkbox" class="cb" data-k="'+k+'" aria-label="'+NAMES[i]+' erledigt"'+(isDone(day,k)?" checked":"")+'></div><div class="body">'+body+'</div></div>';
   });
   h+='<div class="card"><h3>Tagesziel</h3><div class="txt" dir="auto">'+esc(d.goal)+'</div></div>';
@@ -212,70 +258,181 @@ function viewDay(day){
 
 // ---------- Karten
 function catCards(c){return CARDS.filter(x=>x.c===c)}
+const unlockedCards=()=>CARDS.filter(x=>!catLocked(x.c));
+const dueList=()=>unlockedCards().filter(x=>isDue(x.id)).sort((a,b)=>box(a.id)-box(b.id)).map(x=>x.id);
+function progressCards(){const u=unlockedCards();return [u.filter(x=>isKnown(x.id)).length,u.length]}
+function searchCards(q){
+  q=q.trim().toLowerCase();if(!q)return[];
+  const u=unlockedCards(),r=u.filter(x=>x.de.toLowerCase().includes(q));
+  const r2=u.filter(x=>!r.includes(x)&&((x.fa||"").toLowerCase().includes(q)||(x.ex||"").toLowerCase().includes(q)));
+  return r.concat(r2).slice(0,40);
+}
 function viewCards(){
+  const due=dueList(),pr=progressCards();
+  let h='<div class="card"><h3>Wiederholung</h3><div>'+(due.length?'Heute fällig: '+due.length+' Karten':'Heute ist nichts fällig. Lerne neue Karten oder starte ein Quiz.')+'</div><div class="small" style="font-weight:400;margin-top:4px">'+pr[0]+' von '+pr[1]+' freigeschalteten Karten gelernt. Gewusste Karten kommen nach 3, 7, 14 und 30 Tagen wieder.</div>'
+   +(due.length?'<a class="btn f" href="#/flashdue">Jetzt wiederholen ('+due.length+')</a>':'')+'<a class="btn" href="#/quizall">Quiz mit allen freigeschalteten Karten</a></div>'
+   +'<input type="text" id="qs" placeholder="Karten durchsuchen" autocomplete="off" style="margin-bottom:10px"><div id="cl"></div>';
+  return h;
+}
+function catsHtml(){
   let h='';
   GROUPS.forEach(g=>{
     h+='<div class="sh">'+g[0].toUpperCase()+'</div>';
     for(let c=g[1];c<=g[2];c++){
-      const a=catCards(c),k=a.filter(x=>S.known[x.id]).length;
+      const a=catCards(c),k=a.filter(x=>isKnown(x.id)).length;
       h+='<a class="card cat" href="#/flash/'+c+'" style="margin-bottom:8px"><div class="sp"><b>'+esc(CATS[c])+'</b><div class="muted">'+a.length+' Karten · '+k+' gewusst</div></div><b class="muted">'+(catLocked(c)?"🔒":"›")+'</b></a>';
     }
   });
   return h;
 }
-let FS={cat:-1,order:[],i:0,flip:false,rev:false,onlyOpen:false};
-function buildDeck(c,keepId){
-  let a=catCards(c);if(FS.onlyOpen)a=a.filter(x=>!S.known[x.id]);
-  FS.order=a.map(x=>x.id);
-  if(FS.shuffle){for(let i=FS.order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[FS.order[i],FS.order[j]]=[FS.order[j],FS.order[i]]}}
-  FS.i=0;FS.flip=false;
+function bindCards(){
+  const cl=$("#cl"),qs=$("#qs");cl.innerHTML=catsHtml();
+  qs.oninput=()=>{
+    const q=qs.value;if(!q.trim()){cl.innerHTML=catsHtml();return}
+    const r=searchCards(q);
+    cl.innerHTML='<div class="muted" style="margin-bottom:8px">'+(r.length?r.length+" Treffer – tippe auf eine Karte.":"Keine Treffer in den freigeschalteten Karten.")+'</div>'
+      +r.map(x=>'<a class="card" href="#/flashid/'+x.id+'" style="display:block;color:inherit;text-decoration:none;margin-bottom:8px"><b style="font-size:17px">'+esc(x.de)+'</b><div class="muted" dir="auto">'+esc(x.fa)+'</div></a>').join("");
+  };
 }
-function viewFlash(c){
-  if(!(c>=0&&c<CATS.length)){location.replace("#/cards");return}
-  if(catLocked(c)){location.replace("#/unlock");return}
-  if(FS.cat!==c){FS={cat:c,order:[],i:0,flip:false,rev:false,onlyOpen:false,shuffle:false};buildDeck(c)}
-  drawFlash(c);
+// Karten-Ansicht: spec = {key,title,ids,review}
+let FS={key:"",order:[],i:0,flip:false,rev:false,onlyOpen:false,shuffle:false,spec:null};
+let _by=null;const byId=()=>{if(!_by){_by={};CARDS.forEach(x=>_by[x.id]=x)}return _by};
+function buildDeck(){
+  const sp=FS.spec;let ids=sp.ids.slice();
+  if(sp.review)ids=ids.filter(isDue);else if(FS.onlyOpen)ids=ids.filter(id=>!isKnown(id));
+  if(FS.shuffle){for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]]}}
+  FS.order=ids;FS.i=0;FS.flip=false;
 }
-const BYID=()=>{const m={};CARDS.forEach(x=>m[x.id]=x);return m};
-let _by=null;
-function drawFlash(c){
-  _by=_by||BYID();
-  const a=catCards(c),known=a.filter(x=>S.known[x.id]).length;
-  let h='<div class="muted" style="margin-bottom:8px">'+esc(c>=9?"B2 Wortschatz · ":"Grammatik · ")+esc(CATS[c])+" · "+known+" / "+a.length+" gewusst</div>";
+function openFlash(spec){
+  if(FS.key!==spec.key){FS={key:spec.key,order:[],i:0,flip:false,rev:false,onlyOpen:false,shuffle:false,spec};buildDeck()}
+  else FS.spec=spec;
+  drawFlash();
+}
+function viewFlash(kind,arg){
+  if(kind==="flash"){
+    const c=+arg;if(!(c>=0&&c<CATS.length)){location.replace("#/cards");return}
+    if(catLocked(c)){location.replace("#/unlock");return}
+    return openFlash({key:"c"+c,title:(c>=9?"B2 Wortschatz · ":"Grammatik · ")+CATS[c],ids:catCards(c).map(x=>x.id)});
+  }
+  if(kind==="flashdue")return openFlash({key:"due"+dayNum()+":"+dueList().length,title:"Wiederholung",ids:dueList(),review:true});
+  if(kind==="flashid")return openFlash({key:"id"+arg+Math.random(),title:"Suche",ids:[+arg]});
+}
+function speak(t){
+  try{
+    t=String(t||"").replace(/\([^)]*\)/g," ").replace(/[…~–]/g," ");const sl=t.indexOf("/");if(sl>0)t=t.slice(0,sl);t=t.replace(/\s+/g," ").trim();if(!t)return;
+    const u=new SpeechSynthesisUtterance(t);u.lang="de-DE";u.rate=.9;
+    const v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith("de"));if(v)u.voice=v;
+    speechSynthesis.cancel();speechSynthesis.speak(u);
+  }catch(e){alert("Sprachausgabe nicht verfügbar")}
+}
+function drawFlash(){
+  const by=byId(),sp=FS.spec,all=sp.ids.map(id=>by[id]);
+  const known=all.filter(x=>isKnown(x.id)).length;
+  let h='<div class="muted" style="margin-bottom:8px">'+esc(sp.title)+" · "+known+" / "+all.length+" gewusst</div>";
+  let o=null;
   if(!FS.order.length){
-    h+='<div class="card big0">'+(FS.onlyOpen?"Alles gewusst! 🎉":"Keine Karten")+'</div>';
+    h+='<div class="card big0">'+(sp.review?"Alles wiederholt – super! 🎉":FS.onlyOpen?"Alles gewusst! 🎉":"Keine Karten")+'</div>';
   }else{
     if(FS.i>=FS.order.length)FS.i=FS.order.length-1;
-    const o=_by[FS.order[FS.i]];
-    let front='',back='';
+    o=by[FS.order[FS.i]];
     if(!FS.flip){
-      front=FS.rev?'<div class="fa" dir="auto">'+esc(o.fa)+'</div>':'<div class="de">'+esc(o.de)+'</div>';
+      const front=FS.rev?'<div class="fa" dir="auto">'+esc(o.fa)+'</div>':'<div class="de">'+esc(o.de)+'</div>';
       h+='<div class="card fc" id="fc"><div class="small">'+(FS.i+1)+" / "+FS.order.length+'</div><div style="margin:auto 0;text-align:center;padding:18px 0;font-size:26px">'+front+'</div><div class="muted" style="text-align:center">Tippen zum Umdrehen</div></div>';
     }else{
       const blk=(t,v)=>v?'<div class="blk"><b>'+t+'</b><div class="txt" dir="auto">'+esc(v)+'</div></div>':'';
-      back='<div class="de">'+esc(o.de)+'</div><div class="fa" dir="auto">'+esc(o.fa)+'</div>';
+      let back='<div class="de">'+esc(o.de)+'</div><div class="fa" dir="auto">'+esc(o.fa)+'</div>';
       if(o.f&&o.f.length===3)back+=blk("Präsens",o.f[0])+blk("Präteritum",o.f[1])+blk("Perfekt",o.f[2]);
       back+=blk("Ergänzung",o.e)+blk("Einfaches Verb / Umschreibung",o.s)+blk("Präpositionen",o.p)+blk("Satzverbindungen",o.cj);
       if(o.i){const noun=/^(der|die|das) /.test(o.de);back+=blk(noun?"Plural":"Formen",o.i)}
       back+=blk("Beispiel",o.ex);
       if(o.sub&&o.sub.length)back+=blk("Wendungen",o.sub.map(s=>s.de+"  –  "+s.fa).join("\n"));
-      h+='<div class="card fc" id="fc"><div class="small">'+(FS.i+1)+" / "+FS.order.length+(S.known[o.id]?" · ✓ gewusst":"")+'</div>'+back+'</div>';
+      h+='<div class="card fc" id="fc"><div class="small">'+(FS.i+1)+" / "+FS.order.length+(isKnown(o.id)?" · ✓ gewusst":"")+'</div>'+back+'</div>';
     }
+    h+='<div class="two" style="justify-content:center"><button class="btn" id="sw" style="margin:0">🔊 Wort</button>'+(o.ex?'<button class="btn" id="se" style="margin:0">🔊 Beispiel</button>':'')+'</div>';
     h+='<div class="two"><button class="btn" id="no">Nochmal</button><button class="btn f" id="yes">Gewusst ✓</button></div>';
     h+='<div class="two"><button class="btn" id="pv"'+(FS.i<1?" disabled":"")+'>‹</button><button class="btn" id="nx"'+(FS.i>=FS.order.length-1?" disabled":"")+'>›</button></div>';
   }
-  h+='<div class="two"><button class="btn" id="sh">'+(FS.shuffle?"Ordnung":"Mischen")+'</button><button class="btn" id="op">'+(FS.onlyOpen?"Alle Karten":"Nur offene")+'</button></div>';
-  h+='<button class="btn" id="rv">'+(FS.rev?"Persisch → Deutsch (aktiv)":"Deutsch → Persisch (aktiv)")+" · wechseln</button>";
+  h+='<div class="two"><button class="btn" id="sh">'+(FS.shuffle?"Ordnung":"Mischen")+'</button>'+(sp.review?'':'<button class="btn" id="op">'+(FS.onlyOpen?"Alle Karten":"Nur offene")+'</button>')+'<button class="btn" id="qz">Quiz</button></div>';
+  h+='<button class="btn" id="rv">'+(FS.rev?"Persisch → Deutsch":"Deutsch → Persisch")+" · wechseln</button>";
   render("Lernkarten",true,h,null);
-  const go=d=>{FS.i=Math.max(0,Math.min(FS.order.length-1,FS.i+d));FS.flip=false;drawFlash(c)};
-  const fc=$("#fc");if(fc)fc.onclick=()=>{FS.flip=!FS.flip;const y=$("#main").scrollTop;drawFlash(c);$("#main").scrollTop=y};
-  const yes=$("#yes");if(yes){yes.onclick=()=>{S.known[FS.order[FS.i]]=1;save();if(FS.i<FS.order.length-1)go(1);else{FS.flip=false;drawFlash(c)}};
-    $("#no").onclick=()=>{delete S.known[FS.order[FS.i]];save();if(FS.i<FS.order.length-1)go(1);else{FS.flip=false;drawFlash(c)}};
-    $("#pv").onclick=()=>go(-1);$("#nx").onclick=()=>go(1)}
-  $("#sh").onclick=()=>{FS.shuffle=!FS.shuffle;buildDeck(c);drawFlash(c)};
-  $("#op").onclick=()=>{FS.onlyOpen=!FS.onlyOpen;buildDeck(c);drawFlash(c)};
-  $("#rv").onclick=()=>{FS.rev=!FS.rev;FS.flip=false;drawFlash(c)};
+  const go=d=>{FS.i=Math.max(0,Math.min(FS.order.length-1,FS.i+d));FS.flip=false;drawFlash()};
+  const after=ok=>{rate(FS.order[FS.i],ok);
+    if(sp.review){const id=FS.order.splice(FS.i,1)[0];if(!ok)FS.order.push(id);if(FS.i>=FS.order.length)FS.i=0;FS.flip=false;drawFlash()}
+    else if(ok&&FS.onlyOpen){FS.order.splice(FS.i,1);if(FS.i>=FS.order.length)FS.i=0;FS.flip=false;drawFlash()}
+    else if(FS.i<FS.order.length-1)go(1);else{FS.flip=false;drawFlash()}};
+  const fc=$("#fc");if(fc)fc.onclick=()=>{FS.flip=!FS.flip;const y=$("#main").scrollTop;drawFlash();$("#main").scrollTop=y};
+  if($("#yes")){$("#yes").onclick=()=>after(true);$("#no").onclick=()=>after(false);$("#pv").onclick=()=>go(-1);$("#nx").onclick=()=>go(1);
+    $("#sw").onclick=()=>speak(o.de);if($("#se"))$("#se").onclick=()=>speak(o.ex)}
+  $("#sh").onclick=()=>{FS.shuffle=!FS.shuffle;buildDeck();drawFlash()};
+  if($("#op"))$("#op").onclick=()=>{FS.onlyOpen=!FS.onlyOpen;buildDeck();drawFlash()};
+  $("#rv").onclick=()=>{FS.rev=!FS.rev;FS.flip=false;drawFlash()};
+  $("#qz").onclick=()=>{QZ={ids:sp.ids.slice(),title:sp.title};startQuiz();location.hash="#/quiz"};
 }
+
+// ---------- Quiz
+let QZ={ids:[],title:""},QR={round:[],i:0,right:0};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startQuiz(){QR={round:shuffle(QZ.ids).slice(0,15),i:0,right:0}}
+function viewQuiz(){
+  const by=byId();
+  if(QZ.ids.length<4){render("Quiz",true,'<div class="card"><b>Für ein Quiz braucht es mindestens 4 Karten.</b></div>',null);return}
+  if(QR.i>=QR.round.length){
+    const pct=Math.round(100*QR.right/Math.max(1,QR.round.length));
+    render("Quiz",true,'<div class="card"><div class="small acct">Ergebnis</div><div class="big">'+QR.right+' von '+QR.round.length+' richtig ('+pct+' %)</div><div class="muted" style="margin-top:6px">'+(pct>=80?"Sehr gut! ":"Weiter üben – ")+'Falsche Karten kommen automatisch zur Wiederholung zurück.</div><button class="btn f" id="again">Neue Runde</button><button class="btn" id="done">Fertig</button></div>',null);
+    $("#again").onclick=()=>{startQuiz();viewQuiz()};$("#done").onclick=()=>history.back();return;
+  }
+  const o=by[QR.round[QR.i]];
+  const withE=QZ.ids.map(id=>by[id]).filter(x=>x.e);
+  let type=Math.random()<.5?0:1;
+  if(o.e&&(o.c===5||o.c===6)&&withE.length>=4&&Math.random()>.33)type=2;
+  let label,question,ans,key;
+  if(type===0){label="Was bedeutet das auf Persisch?";question=o.de;ans=o.fa;key="fa"}
+  else if(type===1){label="Wie heißt das auf Deutsch?";question=o.fa;ans=o.de;key="de"}
+  else{label="Welche Ergänzung gehört dazu?";question=o.de+"  –  "+o.fa;ans=o.e;key="e"}
+  const pool=shuffle(QZ.ids.map(id=>by[id]).filter(x=>x.id!==o.id&&x[key]));
+  const opts=[ans];for(const x of pool){if(opts.length>=4)break;if(!opts.includes(x[key]))opts.push(x[key])}
+  const sh=shuffle(opts);
+  render("Quiz · "+(QR.i+1)+" / "+QR.round.length,true,'<div class="small acct">'+label+'</div><div class="big" style="margin:8px 0 16px" dir="auto">'+esc(question)+'</div>'
+    +(type===0?'<button class="btn" id="sp" style="width:auto;display:inline-block;margin:0 0 12px">🔊 Anhören</button>':'')
+    +sh.map((t,i)=>'<button class="btn opt" data-i="'+i+'" dir="auto" style="font-size:17px;color:var(--text);text-align:center">'+esc(t)+'</button>').join("")
+    +'<div id="fb" style="margin:10px 0;font-weight:700"></div><button class="btn f" id="nx" style="display:none">Weiter ›</button>',null);
+  if($("#sp"))$("#sp").onclick=()=>speak(o.de);
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const ok=sh[+b.dataset.i]===ans;
+    document.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(sh[+x.dataset.i]===ans){x.style.background="var(--ok)";x.style.color="#fff"}});
+    if(!ok){b.style.background="#C0504D";b.style.color="#fff"}else QR.right++;
+    rate(o.id,ok);$("#fb").textContent=ok?"Richtig ✓":"Leider falsch – die Karte kommt bald wieder.";$("#fb").style.color=ok?"var(--okt)":"#C0504D";$("#nx").style.display="block";
+  });
+  $("#nx").onclick=()=>{QR.i++;viewQuiz()};
+}
+
+// ---------- Redemittel
+function viewHelp(kind){
+  const data=(HELP&&HELP[kind==="write"?"schreiben":"sprechen"])||[];
+  render(kind==="write"?"Schreiben · Redemittel":"Sprechen · Redemittel",true,data.map(s=>'<div class="card"><h3>'+esc(s[0])+'</h3><div class="txt" dir="auto" style="margin-top:8px;user-select:text;-webkit-user-select:text">'+esc(s[1])+'</div></div>').join(""),null);
+}
+
+// ---------- Prüfungs-Timer
+let TM={min:90,remain:90*60000,end:0,run:false,t:null};
+function viewTimer(){
+  TM.min=S.timer_min||TM.min;if(!TM.run&&TM.remain<=0)TM.remain=TM.min*60000;
+  render("Prüfungs-Timer",true,'<div class="muted">Wähle eine Dauer oder stelle sie selbst ein. Die Richtwerte entsprechen üblichen Prüfungszeiten; prüfe die genaue Dauer in der offiziellen Modellprüfung.</div>'
+   +'<div class="two" style="margin-top:8px">'+[["Lesen 90",90],["Hören 40",40],["Schreiben 60",60],["Sprechen 15",15]].map(x=>'<button class="btn pre" data-m="'+x[1]+'" style="font-size:13px">'+x[0]+'</button>').join("")+'</div>'
+   +'<div id="tt" class="big" style="font-size:64px;text-align:center;margin:24px 0 4px"></div><div id="ti" class="muted" style="text-align:center"></div>'
+   +'<div class="two" style="margin-top:12px"><button class="btn" id="tm">− 5 Min.</button><button class="btn" id="tp">+ 5 Min.</button></div><button class="btn f" id="ts"></button><button class="btn" id="tr">Zurücksetzen</button>',null);
+  const draw=()=>{const s=Math.ceil(Math.max(0,TM.remain)/1000);$("#tt")&&($("#tt").textContent=pad(Math.floor(s/60))+":"+pad(s%60));
+    $("#ti")&&($("#ti").textContent=TM.run?"Läuft …":(TM.remain<=0?"Zeit ist um!":"Dauer: "+TM.min+" Min."));
+    $("#ts")&&($("#ts").textContent=TM.run?"Pause":(TM.remain>0&&TM.remain<TM.min*60000?"Weiter":"Start"))};
+  const setMin=m=>{TM.min=m;S.timer_min=m;save();TM.run=false;clearInterval(TM.t);TM.remain=m*60000;draw()};
+  const tick=()=>{TM.remain=TM.end-Date.now();if(TM.remain<=0){TM.remain=0;TM.run=false;clearInterval(TM.t);draw();beep();return}draw()};
+  document.querySelectorAll(".pre").forEach(b=>b.onclick=()=>setMin(+b.dataset.m));
+  $("#tm").onclick=()=>setMin(Math.max(1,TM.min-5));$("#tp").onclick=()=>setMin(Math.min(180,TM.min+5));
+  $("#ts").onclick=()=>{if(TM.run){TM.run=false;clearInterval(TM.t);TM.remain=TM.end-Date.now()}else{if(TM.remain<=0)TM.remain=TM.min*60000;TM.end=Date.now()+TM.remain;TM.run=true;TM.t=setInterval(tick,250);try{navigator.wakeLock&&navigator.wakeLock.request("screen").catch(()=>{})}catch(e){}}draw()};
+  $("#tr").onclick=()=>{TM.run=false;clearInterval(TM.t);TM.remain=TM.min*60000;draw()};
+  if(TM.run){clearInterval(TM.t);TM.t=setInterval(tick,250)}
+  draw();
+}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<3;i++){const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.3;o.start(a.currentTime+i*.5);o.stop(a.currentTime+i*.5+.3)}}catch(e){}if(navigator.vibrate)navigator.vibrate([300,150,300]);alert("Die Zeit ist um!")}
 
 // ---------- Freischalten
 function viewUnlock(){
@@ -299,15 +456,17 @@ function pad(n){return String(n).padStart(2,"0")}
 function viewSettings(){
   const m=S.theme||0,td=today(),t=S.rem||"08:00";
   return '<div class="card radio"><h3>Darstellung</h3>'+[["System",0],["Hell",1],["Dunkel",2]].map(x=>'<label><input type="radio" name="th" value="'+x[1]+'"'+(m===x[1]?" checked":"")+'>'+x[0]+'</label>').join("")+'</div>'
+  +'<div class="card radio"><h3>Sprache der Menüs</h3><div class="muted" style="margin-bottom:4px">Wähle, in welcher Sprache Menüs und Hinweise erscheinen. Die Lerninhalte bleiben unverändert.</div>'+[["Deutsch + Persisch",0],["Nur Deutsch",1],["Nur Persisch",2]].map(x=>'<label><input type="radio" name="lg" value="'+x[1]+'"'+(LANG()===x[1]?" checked":"")+'>'+x[0]+'</label>').join("")+'</div>'
   +'<div class="card"><h3>Aktueller Plantag</h3><div class="row"><button class="btn" id="m1" style="width:56px;margin:0">−</button><div class="sp big" style="text-align:center;font-size:18px" id="cur">Heute: Tag '+td+' von '+N()+'</div><button class="btn" id="p1" style="width:56px;margin:0">+</button></div></div>'
   +'<div class="card"><h3>Erinnerung</h3><div class="muted">Auf dem iPhone kann eine Web-App keine zuverlässigen Hintergrund-Benachrichtigungen senden. Stattdessen legst du einen täglichen Kalendertermin mit Erinnerung an – das funktioniert zuverlässig, auch wenn die App geschlossen ist.</div>'
   +'<div class="small" style="margin-top:10px">Uhrzeit</div><input type="time" id="rt" value="'+t+'"><button class="btn f" id="ics">Tägliche Erinnerung zum Kalender hinzufügen</button><div class="muted" style="margin-top:6px">Es öffnet sich die Kalender-Vorschau: Tippe auf „Alle hinzufügen“. Zum Ändern den Termin im Kalender löschen und neu hinzufügen.</div></div>'
   +'<div class="card"><h3>Fortschritt sichern</h3><div class="muted">Safari kann Daten löschen. Kopiere diesen Text als Sicherung (z. B. in Notizen) und füge ihn bei Bedarf wieder ein.</div><button class="btn" id="exp">Sicherung kopieren</button><textarea id="imp" rows="2" placeholder="Sicherung hier einfügen" style="margin-top:8px;width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px"></textarea><button class="btn" id="impb">Sicherung wiederherstellen</button><div class="muted" id="bm" style="margin-top:6px"></div></div>'
   +'<div class="card"><h3>Support</h3><div style="font-size:18px;font-weight:700">'+NAME+'</div><div class="muted" style="margin-top:6px">Telefon</div><div style="font-weight:700;direction:ltr;text-align:left">'+PHONE+'</div><div class="muted" style="margin-top:6px">E-Mail</div><div style="font-weight:700">'+EMAIL+'</div><a class="btn a" href="tel:'+PHONE+'">Anrufen</a><a class="btn f" href="mailto:'+EMAIL+'">E-Mail schreiben</a></div>'
-  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 1.8</div>';
+  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.0.0</div>';
 }
 function bindSettings(){
   document.querySelectorAll('input[name=th]').forEach(r=>r.onchange=()=>{S.theme=+r.value;save();applyTheme()});
+  document.querySelectorAll('input[name=lg]').forEach(r=>r.onchange=()=>{S.lang=+r.value;save();route()});
   const upd=()=>$("#cur").textContent="Heute: Tag "+today()+" von "+N();
   $("#m1").onclick=()=>{setCurrent(today()-1);upd()};$("#p1").onclick=()=>{setCurrent(today()+1);upd()};
   $("#ics").onclick=()=>{
@@ -324,8 +483,8 @@ function bindSettings(){
 (async function(){
   applyTheme();
   try{
-    const [d,c]=await Promise.all([fetch("days.json").then(r=>r.json()),fetch("cards.json").then(r=>r.json())]);
-    DAYS=d;CARDS=c;
+    const [d,c,hp,tt]=await Promise.all([fetch("days.json").then(r=>r.json()),fetch("cards.json").then(r=>r.json()),fetch("help.json").then(r=>r.json()),fetch("tr.json").then(r=>r.json())]);
+    DAYS=d;CARDS=c;HELP=hp;TR=tt;
   }catch(e){$("#main").innerHTML='<div class="warn">Daten konnten nicht geladen werden. Bitte mit Internet öffnen.</div>';return}
   await initAccess();
   if(!location.hash)location.hash="#/today";

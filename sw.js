@@ -1,5 +1,5 @@
-const V='b2osd-v1';
-const FILES=['./','index.html','days.json','cards.json','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
+const V='b2osd-v4';
+const FILES=['help.json','tr.json','fonts/Vazirmatn-Regular.woff','fonts/Vazirmatn-Bold.woff','./','index.html','days.json','cards.json','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
