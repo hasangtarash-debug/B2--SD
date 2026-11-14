@@ -35,6 +35,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/
 .sp{flex:1}
 .small{font-size:12px;color:var(--muted);font-weight:700}
 .muted{color:var(--muted);font-size:14px}
+.bd{position:absolute;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;border:2px solid #E0502B;background:rgba(255,255,255,.92);color:#C03A1A;font:700 12px inherit;padding:0}.bd.on{background:#E0502B;color:#fff}
 h2{margin:0 0 4px;font-size:20px}h3{margin:0 0 6px;font-size:17px;color:var(--title)}
 .big{font-size:26px;font-weight:700}
 .acct{color:var(--acct)}
@@ -169,6 +170,17 @@ function i18n(root){
 }
 
 
+
+// ---------- Gratis-Test: 2 Bildseiten, 10 Nachschlagewörter
+function allowSeen(key,id,limit){
+  if(UNLOCKED)return true;
+  S[key]=S[key]||[];if(S[key].includes(id))return true;
+  if(S[key].length>=limit)return false;
+  S[key].push(id);save();return true;
+}
+const seenFull=(key,limit)=>!UNLOCKED&&(S[key]||[]).length>=limit;
+const lockHtml=m=>'<div class="card"><div>🔒 '+m+'</div><a class="btn a" href="#/unlock">Vollversion freischalten · '+PRICE+'</a></div>';
+
 // ---------- Wörterbuch (Duden Synonyme)
 let SYN=null,SYNF=null,SYNQ="";
 const foldS=s=>s.toLowerCase().replace(/[äàáâ]/g,"a").replace(/[öôó]/g,"o").replace(/[üûú]/g,"u").replace(/[éèê]/g,"e").replace(/ß/g,"ss").replace(/[¹²³⁴⁵⁶⁷⁸⁹]/g,"");
@@ -193,7 +205,7 @@ function synWords(b){
   return r;
 }
 async function viewDict(){
-  render("B2 ÖSD",false,'<div class="card" style="margin-bottom:10px"><h3>Wörterbuch</h3><div class="small" style="font-weight:400">Duden – Das Wörterbuch der Synonyme</div></div><input type="text" id="dq" placeholder="Wort oder Wortteil eingeben" autocomplete="off" autocapitalize="off" style="margin-bottom:10px"><div id="dl"><div class="muted">Lade …</div></div>',"dict");
+  render("B2 ÖSD",false,'<div class="card" style="margin-bottom:10px"><h3>Wörterbuch</h3><div class="small" style="font-weight:400">Duden – Das Wörterbuch der Synonyme</div></div>'+modeSw(0)+'<input type="text" id="dq" placeholder="Wort oder Wortteil eingeben" autocomplete="off" autocapitalize="off" style="margin-bottom:10px"><div id="dl"><div class="muted">Lade …</div></div>',"dict");
   await synLoad();
   const dq=$("#dq"),dl=$("#dl");dq.value=SYNQ;
   const hint=()=>{dl.innerHTML='<div class="muted" id="dh">Tippe einen Wortteil – am Anfang, in der Mitte oder am Ende. Gefunden werden Stichwörter und Wörter in den Synonymen.</div>';i18n(dl)};
@@ -202,18 +214,63 @@ async function viewDict(){
     const {r,hc}=synSearch(SYNQ,60);
     if(!r.length){dl.innerHTML='<div class="muted">Keine Treffer.</div>';i18n(dl);return}
     dl.innerHTML=r.map((i,k)=>(k===hc&&hc>0?'<div class="muted" style="margin:8px 2px 6px;font-size:12px">'+(LANG()===2?"در توضیح مدخل‌های دیگر":"Weitere Einträge mit diesem Wort in den Synonymen")+'</div>':'')
-      +'<a class="card" data-nt="1" href="#/dictw/'+i+'" style="display:block;color:inherit;text-decoration:none;margin-bottom:6px;padding:10px 14px"><b style="font-size:17px">'+esc(SYN[i][0])+'</b><div class="muted" style="font-size:13px">'+esc(SYN[i][1].replace(/\n/g,"  ").slice(0,90))+'</div></a>').join("");
+      +'<a class="card" data-nt="1" href="#/dictw/'+i+'" style="display:block;color:inherit;text-decoration:none;margin-bottom:6px;padding:10px 14px"><b style="font-size:17px">'+esc(SYN[i][0])+'</b>'+(seenFull("sseen",10)?'':'<div class="muted" style="font-size:13px">'+esc(SYN[i][1].replace(/\n/g,"  ").slice(0,90))+'</div>')+'</a>').join("");
   };
   dq.oninput=go;
   go();
 }
 async function viewDictW(i){
   await synLoad();const e=SYN[i];if(!e){location.replace("#/dict");return}
+  if(!allowSeen("sseen",String(i),10)){render("B2 ÖSD",true,'<h2 style="margin:0 0 8px" data-nt="1">'+esc(e[0])+'</h2>'+lockHtml("Im kostenlosen Test kannst du 10 Wörter nachschlagen. Für unbegrenzte Suche brauchst du die Vollversion."),null);return}
   const links=synWords(e[1]).filter(w=>synFind(w)>=0);
   const h='<div class="card"><h3 data-nt="1" style="font-size:26px;margin:0">'+esc(e[0])+'</h3><div class="muted" style="font-size:12px;margin:6px 0 4px">Synonyme</div><div data-nt="1" style="font-size:17px;white-space:pre-line">'+esc(e[1])+'</div></div>'
    +(links.length?'<h3 style="margin:14px 0 8px">Weiterschlagen</h3><div data-nt="1" style="display:flex;flex-wrap:wrap;gap:8px">'+links.map(w=>'<a href="#/dictw/'+synFind(w)+'" style="background:var(--today);color:var(--title);padding:7px 12px;border-radius:16px;text-decoration:none;font-size:15px">'+esc(w)+'</a>').join("")+'</div>':'');
   render("B2 ÖSD",true,h,null);
   // Titel der Überschriften übersetzen, aber Wörterbuchtext nicht
+}
+
+
+// ---------- Bildwörterbuch
+let BILD=null,BSEL=-1,BHIDE=false;
+function modeSw(m){return '<div class="two" style="margin:0 0 10px"><a class="btn'+(m===0?' f':'')+'" href="#/dict">Synonyme</a><a class="btn'+(m===1?' f':'')+'" href="#/bild">Bildwörterbuch</a></div>'}
+const gcol=d=>/^der /i.test(d)?"#3B7BE0":/^die /i.test(d)?"#D9486A":/^das /i.test(d)?"#2FA36B":"inherit";
+const cap=t=>t||"";
+async function viewBild(ci,bi){
+  if(!BILD)BILD=await fetch("bild.json").then(r=>r.json());
+  const m=LANG();
+  if(!(ci>=0)){
+    render("B2 ÖSD",false,'<div class="card" style="margin-bottom:10px"><h3>Wörterbuch</h3><div class="small" style="font-weight:400">Bildwörterbuch · '+BILD.length+' Themen mit Bildern. Tippe auf die Nummern im Bild.</div></div>'+modeSw(1)
+      +BILD.map((c,i)=>'<a class="card" href="#/bild/'+i+'" style="display:block;color:inherit;text-decoration:none;margin-bottom:8px;padding:10px 14px"><b data-nt="1" style="font-size:17px">'+(c.n>0?c.n+'. ':'')+esc(c.de)+'</b><div class="muted" data-nt="1" dir="auto">'+(m!==1?esc(c.fa)+' · ':'')+esc(c.en)+'</div></a>').join(""),"dict");
+    return;
+  }
+  const c=BILD[ci];if(!c){location.replace("#/bild");return}
+  if(!(bi>=0)){
+    render(c.de,true,'<h2 style="margin:0 0 2px" data-nt="1">'+esc(c.de)+'</h2>'+(m!==1?'<div class="muted" data-nt="1" dir="auto" style="margin-bottom:10px">'+esc(c.fa)+'</div>':'')
+      +c.b.map((b,i)=>'<a class="card" href="#/bild/'+ci+'/'+i+'" style="display:block;color:inherit;text-decoration:none;margin-bottom:8px;padding:10px 14px"><b data-nt="1" style="font-size:17px">'+esc(cap(b.de)||("Szene "+(i+1)))+'</b><div class="muted" data-nt="1" dir="auto">'+(m!==1&&b.fa?esc(b.fa)+' · ':'')+esc(b.en)+(b.en?' · ':'')+b.l.length+' Wörter</div></a>').join(""),null);
+    return;
+  }
+  const b=c.b[bi];if(!b){location.replace("#/bild/"+ci);return}
+  if(!allowSeen("bseen",b.img,2)){render(b.de,true,'<h2 style="margin:0 0 8px" data-nt="1">'+esc(b.de)+'</h2>'+lockHtml("Im kostenlosen Test kannst du 2 Bildseiten ansehen. Für alle Seiten brauchst du die Vollversion."),null);return}
+  BSEL=-1;
+  const wpx=Math.round(Math.min(innerWidth,520)*(b.l.length>14?1.7:1.25));
+  const html='<h2 style="margin:0 0 2px" data-nt="1">'+esc(cap(b.de))+'</h2>'+(m!==1&&b.fa?'<div class="muted" data-nt="1" dir="auto" style="margin-bottom:8px">'+esc(b.fa)+'</div>':'')
+   +'<div class="card" id="binfo" style="margin-bottom:8px"></div>'
+   +'<div style="overflow-x:auto;margin-bottom:10px;border-radius:12px"><div style="position:relative;width:'+wpx+'px;background:#fff"><img src="bild/'+b.img+'" style="width:100%;display:block">'
+   +b.l.map((l,i)=>'<button class="bd" data-i="'+i+'" style="left:'+(l[1]*100)+'%;top:'+(l[2]*100)+'%">'+l[0]+'</button>').join("")+'</div></div>'
+   +'<div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 6px"><h3 style="margin:0">Alle Wörter</h3><a href="#" id="btg" style="font-weight:700;color:var(--title);text-decoration:none">'+(BHIDE?"Wörter zeigen":"Selbsttest")+'</a></div><div id="blist"></div>';
+  render(cap(b.de),true,html,null);
+  const info=$("#binfo");
+  const draw=()=>{
+    document.querySelectorAll(".bd").forEach(e=>e.classList.toggle("on",+e.dataset.i===BSEL));
+    if(BSEL<0)info.innerHTML='<div class="muted">Tippe auf eine Nummer im Bild</div>';
+    else{const l=b.l[BSEL];info.innerHTML='<div style="display:flex;align-items:center;gap:8px"><b data-nt="1" style="flex:1;font-size:21px;color:'+gcol(l[3])+'">'+l[0]+'  '+esc(l[3])+(l[5]?'  ('+esc(l[5])+')':'')+'</b><span id="bsp" style="font-size:26px;cursor:pointer">🔊</span></div>'+(m!==1?'<div data-nt="1" dir="rtl" style="font-size:18px;margin-top:4px">'+esc(l[6])+'</div>':'')+(m!==2&&l[4]?'<div class="muted" data-nt="1">'+esc(l[4])+'</div>':'');$("#bsp").onclick=()=>speak(l[3])}
+    $("#blist").innerHTML=b.l.map((l,i)=>{const hid=BHIDE&&i!==BSEL;return '<div class="card" data-i="'+i+'" style="padding:8px 12px;margin-bottom:6px"><b data-nt="1" style="color:'+(hid?'var(--muted)':gcol(l[3]))+'">'+l[0]+'  '+(hid?'•••':esc(l[3])+(l[5]?'  ('+esc(l[5])+')':''))+'</b>'+(hid?'':'<div class="muted" data-nt="1" dir="auto" style="font-size:13px">'+(m===1?esc(l[4]):esc(l[6])+(l[4]?' · '+esc(l[4]):''))+'</div>')+'</div>'}).join("");
+    document.querySelectorAll("#blist .card").forEach(e=>e.onclick=()=>{BSEL=+e.dataset.i;draw()});
+    i18n(info);
+  };
+  document.querySelectorAll(".bd").forEach(e=>e.onclick=()=>{BSEL=+e.dataset.i;draw()});
+  $("#btg").onclick=ev=>{ev.preventDefault();BHIDE=!BHIDE;draw();$("#btg").textContent=BHIDE?"Wörter zeigen":"Selbsttest";i18n($("#btg").parentNode)};
+  draw();
 }
 
 // ---------- Router
@@ -231,6 +288,7 @@ function route(){
   else if(p==="days"){html=viewDays()}
   else if(p==="cards"){html=viewCards();after=bindCards}
   else if(p==="dict"){return viewDict()}
+  else if(p==="bild"){return viewBild(+h[1],+h[2])}
   else if(p==="dictw"){return viewDictW(+h[1])}
   else if(p==="settings"){html=viewSettings();after=bindSettings}
   else{html=viewToday()}
@@ -512,7 +570,7 @@ function viewSettings(){
   +'<div class="small" style="margin-top:10px">Uhrzeit</div><input type="time" id="rt" value="'+t+'"><button class="btn f" id="ics">Tägliche Erinnerung zum Kalender hinzufügen</button><div class="muted" style="margin-top:6px">Es öffnet sich die Kalender-Vorschau: Tippe auf „Alle hinzufügen“. Zum Ändern den Termin im Kalender löschen und neu hinzufügen.</div></div>'
   +'<div class="card"><h3>Fortschritt sichern</h3><div class="muted">Safari kann Daten löschen. Kopiere diesen Text als Sicherung (z. B. in Notizen) und füge ihn bei Bedarf wieder ein.</div><button class="btn" id="exp">Sicherung kopieren</button><textarea id="imp" rows="2" placeholder="Sicherung hier einfügen" style="margin-top:8px;width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px"></textarea><button class="btn" id="impb">Sicherung wiederherstellen</button><div class="muted" id="bm" style="margin-top:6px"></div></div>'
   +'<div class="card"><h3>Support</h3><div style="font-size:18px;font-weight:700">'+NAME+'</div><div class="muted" style="margin-top:6px">Telefon</div><div style="font-weight:700;direction:ltr;text-align:left">'+PHONE+'</div><div class="muted" style="margin-top:6px">E-Mail</div><div style="font-weight:700">'+EMAIL+'</div><a class="btn a" href="tel:'+PHONE+'">Anrufen</a><a class="btn f" href="mailto:'+EMAIL+'">E-Mail schreiben</a></div>'
-  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.1.0</div>';
+  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.5.0</div>';
 }
 function bindSettings(){
   document.querySelectorAll('input[name=th]').forEach(r=>r.onchange=()=>{S.theme=+r.value;save();applyTheme()});
