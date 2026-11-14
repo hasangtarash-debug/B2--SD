@@ -429,7 +429,9 @@ function speak(t){
   try{
     t=String(t||"").replace(/\([^)]*\)/g," ").replace(/[…~–]/g," ");const sl=t.indexOf("/");if(sl>0)t=t.slice(0,sl);t=t.replace(/\s+/g," ").trim();if(!t)return;
     const u=new SpeechSynthesisUtterance(t);u.lang="de-DE";u.rate=.9;
-    const v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith("de"));if(v)u.voice=v;
+    const vs=speechSynthesis.getVoices().filter(x=>x.lang&&x.lang.toLowerCase().replace("_","-").startsWith("de"));
+    const sc=x=>{const n=(x.name||"").toLowerCase();let r=0;if(/premium/.test(n))r+=50;if(/enhanced|erweitert|verbessert/.test(n))r+=40;if(/siri/.test(n))r+=30;if(/google/.test(n))r+=20;if(/natural|neural|online/.test(n))r+=20;if(x.lang.toLowerCase().replace("_","-")=="de-de")r+=5;if(/compact|eloquence|grandma|grandpa|rocko|shelley|flo|sandy|reed|eddy|bubbles|bad news|good news|jester|organ|superstar|trinoids|whisper|zarvox|albert|bahh|boing|cellos|fred|junior|kathy|ralph/.test(n))r-=60;return r};
+    vs.sort((a,b)=>sc(b)-sc(a));if(vs[0])u.voice=vs[0];
     speechSynthesis.cancel();speechSynthesis.speak(u);
   }catch(e){alert("Sprachausgabe nicht verfügbar")}
 }
@@ -570,7 +572,7 @@ function viewSettings(){
   +'<div class="small" style="margin-top:10px">Uhrzeit</div><input type="time" id="rt" value="'+t+'"><button class="btn f" id="ics">Tägliche Erinnerung zum Kalender hinzufügen</button><div class="muted" style="margin-top:6px">Es öffnet sich die Kalender-Vorschau: Tippe auf „Alle hinzufügen“. Zum Ändern den Termin im Kalender löschen und neu hinzufügen.</div></div>'
   +'<div class="card"><h3>Fortschritt sichern</h3><div class="muted">Safari kann Daten löschen. Kopiere diesen Text als Sicherung (z. B. in Notizen) und füge ihn bei Bedarf wieder ein.</div><button class="btn" id="exp">Sicherung kopieren</button><textarea id="imp" rows="2" placeholder="Sicherung hier einfügen" style="margin-top:8px;width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px"></textarea><button class="btn" id="impb">Sicherung wiederherstellen</button><div class="muted" id="bm" style="margin-top:6px"></div></div>'
   +'<div class="card"><h3>Support</h3><div style="font-size:18px;font-weight:700">'+NAME+'</div><div class="muted" style="margin-top:6px">Telefon</div><div style="font-weight:700;direction:ltr;text-align:left">'+PHONE+'</div><div class="muted" style="margin-top:6px">E-Mail</div><div style="font-weight:700">'+EMAIL+'</div><a class="btn a" href="tel:'+PHONE+'">Anrufen</a><a class="btn f" href="mailto:'+EMAIL+'">E-Mail schreiben</a></div>'
-  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.6.0</div>';
+  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 2.6.2</div>';
 }
 function bindSettings(){
   document.querySelectorAll('input[name=th]').forEach(r=>r.onchange=()=>{S.theme=+r.value;save();applyTheme()});
@@ -597,7 +599,10 @@ function bindSettings(){
   await initAccess();
   if(!location.hash)location.hash="#/today";
   addEventListener("hashchange",route);route();
-  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+  if("serviceWorker" in navigator){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register("sw.js").catch(()=>{});
+    navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!had||document.getElementById("updbar"))return;
+      const d=document.createElement("div");d.id="updbar";d.style.cssText="position:fixed;top:0;left:0;right:0;z-index:99;background:#1f6feb;color:#fff;padding:12px 16px;text-align:center;font:600 14px Vazirmatn,sans-serif;cursor:pointer";
+      d.textContent="Neue Version verfügbar · نسخهٔ جدید آماده است — تازه‌سازی";d.onclick=()=>location.reload();document.body.appendChild(d);});}
 })();
 </script>
 </body>
