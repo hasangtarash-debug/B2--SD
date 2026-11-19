@@ -528,7 +528,7 @@ function viewDay(day){
 }
 
 // ---------- Karten
-function catCards(c){return CARDS.filter(x=>x.c===c)}
+function catCards(c){const a=CARDS.filter(x=>x.c===c);return a.some(x=>x.o!==undefined)?a.map((x,i)=>[x.o!==undefined?x.o:i,x.id,x]).sort((p,q)=>p[0]-q[0]||p[1]-q[1]).map(t=>t[2]):a}
 const unlockedCards=()=>CARDS.filter(x=>!catLocked(x.c));
 const dueList=()=>unlockedCards().filter(x=>isDue(x.id)).sort((a,b)=>box(a.id)-box(b.id)).map(x=>x.id);
 function progressCards(){const u=unlockedCards();return [u.filter(x=>isKnown(x.id)).length,u.length]}
@@ -617,9 +617,13 @@ function drawFlash(){
       const blk=(t,v)=>v?'<div class="blk"><b>'+t+'</b><div class="txt" dir="auto">'+esc(v)+'</div></div>':'';
       let back='<div class="de">'+esc(o.de)+'</div><div class="fa" dir="auto">'+esc(o.fa)+'</div>';
       if(o.f&&o.f.length===3)back+=blk("Präsens",o.f[0])+blk("Präteritum",o.f[1])+blk("Perfekt",o.f[2]);
+      if(o.c===8&&(o.g||o.e)){
+        if(o.i==="Regel")back+=blk("Regel",o.g)+blk("Beispiel",o.ex);
+        else back+=blk("Fall",o.e)+blk("Niveau",o.i)+blk("Beispiel",o.ex)+blk("Hinweis",o.g);
+      }else{
       back+=blk("Ergänzung",o.e)+blk("Einfaches Verb / Umschreibung",o.s)+blk("Präpositionen",o.p)+blk("Satzverbindungen",o.cj);
       if(o.i){const noun=/^(der|die|das) /.test(o.de);back+=blk(noun?"Plural":"Formen",o.i)}
-      back+=blk("Beispiel",o.ex);
+      back+=blk("Beispiel",o.ex);}
       if(o.sub&&o.sub.length)back+=blk("Wendungen",o.sub.map(s=>s.de+"  –  "+s.fa).join("\n"));
       h+='<div class="card fc" id="fc"><div class="small">'+(FS.i+1)+" / "+FS.order.length+(isKnown(o.id)?" · ✓ gewusst":"")+'</div>'+back+'</div>';
     }
@@ -769,7 +773,7 @@ function viewSettings(){
   +'<div class="card"><h3>Fortschritt sichern</h3><div class="muted">Safari kann Daten löschen. Kopiere diesen Text als Sicherung (z. B. in Notizen) und füge ihn bei Bedarf wieder ein.</div><button class="btn" id="exp">Sicherung kopieren</button><textarea id="imp" rows="2" placeholder="Sicherung hier einfügen" style="margin-top:8px;width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px"></textarea><button class="btn" id="impb">Sicherung wiederherstellen</button><div class="muted" id="bm" style="margin-top:6px"></div></div>'
   +'<div class="card"><h3>Abenteuer-Guide</h3><div class="muted">Entdecke die App Schritt für Schritt oder empfiehl sie weiter.</div><button class="btn f" onclick="startGuide()">Guide starten</button><button class="btn" onclick="openShare()">App empfehlen</button></div>'
   +'<div class="card"><h3>Support</h3><div style="font-size:18px;font-weight:700">'+NAME+'</div><div class="muted" style="margin-top:6px">Telefon</div><div style="font-weight:700;direction:ltr;text-align:left">'+PHONE+'</div><div class="muted" style="margin-top:6px">E-Mail</div><div style="font-weight:700">'+EMAIL+'</div><a class="btn a" href="tel:'+PHONE+'">Anrufen</a><a class="btn f" href="mailto:'+EMAIL+'">E-Mail schreiben</a></div>'
-  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 3.2.1</div>';
+  +'<div class="muted" style="text-align:center;margin:8px 0 20px">B2 ÖSD · Version Web 3.4.0</div>';
 }
 function bindSettings(){
   document.querySelectorAll('input[name=th]').forEach(r=>r.onchange=()=>{S.theme=+r.value;save();applyTheme()});
